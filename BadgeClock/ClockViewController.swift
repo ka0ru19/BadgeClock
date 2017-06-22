@@ -10,7 +10,6 @@ import UIKit
 
 class ClockViewController: UIViewController {
     
-    let datePicker = UIDatePicker() //DatePickerオブジェクト生成
     let displaySwitch = UISwitch() // 表示するかどうかのswitch
     //    let dateFomatter = DateFormatter() // datePicker -> limitDate
     let date2badgeFomatter = DateFormatter() // 現在時刻 -> Badgeに表示
@@ -30,7 +29,7 @@ class ClockViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        <#code#>
+        stopBackgroundClock()
     }
     
     override func didReceiveMemoryWarning() {
@@ -66,10 +65,6 @@ extension ClockViewController {
         displaySwitch.isOn = false
         displaySwitch.addTarget(self, action: #selector(self.onClickSwicth(sender:)), for: UIControlEvents.valueChanged)
         
-        datePicker.timeZone = NSTimeZone.local
-        datePicker.datePickerMode = .dateAndTime
-        datePicker.addTarget(self, action: #selector(self.onClickSwicth(sender:)), for: .valueChanged)
-        
         date2badgeFomatter.dateFormat = "ss" // Badgeに表示するフォーマット
         date2badgeFomatter.timeZone = NSTimeZone.local
         
@@ -81,12 +76,9 @@ extension ClockViewController {
         
         displaySwitch.layer.position = CGPoint(x: baseView.frame.width * 3 / 4, y: baseView.frame.height * 1 / 3)
         
-        datePicker.frame = CGRect(x: 0, y: 0, width: baseView.frame.width, height: 200)
-        datePicker.frame.origin.y = baseView.bottomY - DeviceSize.tabBarHeight(tabBarController: self.tabBarController!) - datePicker.frame.height
         
         /****** view の統合 ******/
         baseView.addSubview(displaySwitch)
-        baseView.addSubview(datePicker)
         self.view.addSubview(baseView)
     }
     
@@ -98,10 +90,6 @@ extension ClockViewController {
         } else {
             self.tabBarItem.badgeValue = nil
         }
-    }
-    
-    func onDidChangeDate(sender: UIDatePicker) {
-        //        print(dateFomatter.string(from: sender.date))
     }
     
     func displayBadgeClock() {
