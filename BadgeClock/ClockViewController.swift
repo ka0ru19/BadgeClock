@@ -10,7 +10,7 @@ import UIKit
 
 class ClockViewController: UIViewController {
     
-    let displaySwitch = UISwitch() // 表示するかどうかのswitch
+    var displaySwitch: RAMPaperSwitch! // 表示するかどうかのswitch
     //    let dateFomatter = DateFormatter() // datePicker -> limitDate
     let date2badgeFomatter = DateFormatter() // 現在時刻 -> Badgeに表示
     var backgroundTaskIdentifier: UIBackgroundTaskIdentifier = 0
@@ -23,8 +23,9 @@ class ClockViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         initNotification()
-        initInstances()
         initView()
+        initInstances()
+        
         
     }
     
@@ -62,6 +63,7 @@ extension ClockViewController {
         
         self.tabBarItem.badgeColor = UIColor.red
         
+        
         displaySwitch.isOn = false
         displaySwitch.addTarget(self, action: #selector(self.onClickSwicth(sender:)), for: UIControlEvents.valueChanged)
         
@@ -73,12 +75,27 @@ extension ClockViewController {
     func initView() {
         /****** baseのview ******/
         let baseView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        baseView.backgroundColor = UIColor.cyan
         
-        displaySwitch.layer.position = CGPoint(x: baseView.frame.width * 3 / 4, y: baseView.frame.height * 1 / 3)
+        let dummyIconLength = baseView.frame.width
+        let dummyIconView = UIView(frame: CGRect(x: 0, y: 0, width: dummyIconLength, height: dummyIconLength))
+        dummyIconView.center = CGPoint(x: baseView.center.x - dummyIconLength / 4 , y: baseView.center.y + dummyIconLength / 4)
+        dummyIconView.backgroundColor = UIColor.blue
         
+        let dummyBadgeViewHeight = dummyIconLength / 3
+        let dummyBadgeView = UIView(frame: CGRect(x: 0, y: 0, width: dummyBadgeViewHeight * 2, height: dummyBadgeViewHeight))
+        dummyBadgeView.center = CGPoint(x: dummyBadgeView.frame.origin.x + dummyIconLength , y: dummyBadgeView.frame.origin.y)
+        dummyBadgeView.backgroundColor = UIColor.white
+        
+        
+        displaySwitch = RAMPaperSwitch(view: self.view, color: UIColor.purple)
+        displaySwitch.center = CGPoint(x: dummyBadgeView.center.x, y: dummyBadgeView.center.y)
         
         /****** view の統合 ******/
-        baseView.addSubview(displaySwitch)
+        
+        dummyBadgeView.addSubview(displaySwitch)
+        dummyIconView.addSubview(dummyBadgeView)
+        baseView.addSubview(dummyIconView)
         self.view.addSubview(baseView)
     }
     
