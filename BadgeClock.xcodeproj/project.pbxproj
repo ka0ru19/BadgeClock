@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		631CAFE11EFBB18C00C27EFF /* RAMPaperSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAFE01EFBB18C00C27EFF /* RAMPaperSwitch.swift */; };
 		633455B51EFA338D001D80E6 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 633455B41EFA338D001D80E6 /* icon.png */; };
 		633455B71EFA3544001D80E6 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633455B61EFA3544001D80E6 /* UIViewExtension.swift */; };
 		633455B91EFA3684001D80E6 /* DeviceSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633455B81EFA3684001D80E6 /* DeviceSize.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		631CAFE01EFBB18C00C27EFF /* RAMPaperSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RAMPaperSwitch.swift; sourceTree = "<group>"; };
 		633455B41EFA338D001D80E6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		633455B61EFA3544001D80E6 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		633455B81EFA3684001D80E6 /* DeviceSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceSize.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 				633455B41EFA338D001D80E6 /* icon.png */,
 				633455B61EFA3544001D80E6 /* UIViewExtension.swift */,
 				63F57C051EFA1CBF001948A2 /* ClockViewController.swift */,
+				631CAFE01EFBB18C00C27EFF /* RAMPaperSwitch.swift */,
 				633455B81EFA3684001D80E6 /* DeviceSize.swift */,
 				63F57C071EFA1CC7001948A2 /* TimerViewController.swift */,
 				63F57BF71EFA1AA9001948A2 /* Main.storyboard */,
@@ -151,6 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63F57C081EFA1CC7001948A2 /* TimerViewController.swift in Sources */,
+				631CAFE11EFBB18C00C27EFF /* RAMPaperSwitch.swift in Sources */,
 				63F57C061EFA1CC0001948A2 /* ClockViewController.swift in Sources */,
 				633455B71EFA3544001D80E6 /* UIViewExtension.swift in Sources */,
 				633455B91EFA3684001D80E6 /* DeviceSize.swift in Sources */,
