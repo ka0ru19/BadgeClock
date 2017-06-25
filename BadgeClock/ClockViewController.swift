@@ -39,7 +39,7 @@ class ClockViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppearが呼ばれました")
-        restartDisplayBackgroundClock()
+        restartTimer()
     }
     
     override func didReceiveMemoryWarning() {
@@ -62,7 +62,7 @@ extension ClockViewController {
         // アプリがアクティブになった時に呼ばれるメソッド
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(self.restartDisplayBackgroundClock),
+            selector: #selector(self.restartTimer),
             name: NSNotification.Name.UIApplicationDidBecomeActive,
             object: nil
         )
@@ -88,7 +88,7 @@ extension ClockViewController {
         
         timeLabel.frame = CGRect(x: 0, y: 0, width: dummyIconLength, height: dummyIconLength / 4)
         timeLabel.center = CGPoint(x: baseView.center.x, y: baseView.frame.size.height * 1/6)
-        timeLabel.text = "12:34"
+        timeLabel.text = ""
         timeLabel.textAlignment = .center
         timeLabel.font = UIFont.systemFont(ofSize: CGFloat(timeLabel.frame.size.height - 4))
         timeLabel.textColor = UIColor.black
@@ -122,7 +122,7 @@ extension ClockViewController {
         secondLabel.center.x = dummyBadgeView.frame.size.width / 2
         secondLabel.bounds.origin.y = dummyBadgeView.frame.origin.y - 2
         print("secondLabel.center:\(secondLabel.center)")
-        secondLabel.text = "23"
+        secondLabel.text = ""
         secondLabel.textAlignment = .center
         secondLabel.font = UIFont.systemFont(ofSize: CGFloat(secondLabel.frame.size.height - 8))
         secondLabel.textColor = UIColor.white
@@ -167,7 +167,7 @@ extension ClockViewController {
         }
     }
     
-    func restartDisplayBackgroundClock() {
+    func restartTimer() {
         timer.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateClock), userInfo: nil, repeats: true)
     }
@@ -176,8 +176,7 @@ extension ClockViewController {
         // スイッチに応じてstatusを更新
         print(displaySwitch.isOn)
         
-        timer.invalidate()
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateClock), userInfo: nil, repeats: true)
+        restartTimer()
         
         if timer.isValid == false {
             displayBadgeClock()
@@ -234,7 +233,7 @@ extension ClockViewController: UNUserNotificationCenterDelegate {
         
         switch response.actionIdentifier {
         case ActionIdentifier.continueTimer.rawValue:
-            restartDisplayBackgroundClock()
+            restartTimer()
             setNotification()
         case ActionIdentifier.killTimer.rawValue:
             timer.invalidate()
