@@ -7,14 +7,19 @@
 //
 
 import UIKit
+import UserNotifications
+
+enum ActionIdentifier: String {
+    case continueTimer
+    case killTimer
+}
 
 class ClockViewController: UIViewController {
     
     var displaySwitch: RAMPaperSwitch! // 表示するかどうかのswitch
-    //    let dateFomatter = DateFormatter() // datePicker -> limitDate
     var dummyBadgeView: UIView!
-    let timeLabel = UILabel()
-    let secondLabel = UILabel()
+    let timeLabel = UILabel() // アプリ上で時刻(hh:mm)を表示
+    let secondLabel = UILabel() // アプリ上で秒刻(ss)を表示
     let date2badgeFomatter = DateFormatter() // 現在時刻 -> "ss"にして、Badgeに表示
     let date2hhmmFomatter = DateFormatter() // 現在時刻 -> "hh:mm"にして、timeLabelに表示
     var backgroundTaskIdentifier: UIBackgroundTaskIdentifier = 0
@@ -64,14 +69,6 @@ extension ClockViewController {
     }
     
     func initInstances() {
-        
-        self.tabBarItem.badgeColor = UIColor.red
-        
-        
-        displaySwitch.isOn = true
-        displaySwitch.isEnabled = true
-        displaySwitch.addTarget(self, action: #selector(self.onClickSwicth(sender:)), for: UIControlEvents.valueChanged)
-        
         date2badgeFomatter.dateFormat = "ss" // Badgeに表示するフォーマット
         date2badgeFomatter.timeZone = NSTimeZone.local
         
@@ -79,7 +76,6 @@ extension ClockViewController {
         date2hhmmFomatter.timeZone = NSTimeZone.local
         
         setStatus()
-        
     }
     
     func initView() {
@@ -118,7 +114,9 @@ extension ClockViewController {
         
         displaySwitch = RAMPaperSwitch(view: dummyBadgeView, color: UIColor.red) // スイッチがオンの時の背景色
         displaySwitch.center = CGPoint(x: dummyBadgeView.frame.size.width / 2, y: dummyBadgeView.frame.size.height - displaySwitch.frame.size.height / 2 - 4) // (0, 0)だと画面の左上
-        print("displaySwitch.center:\(displaySwitch.center)")
+        displaySwitch.isOn = true
+        displaySwitch.isEnabled = true
+        displaySwitch.addTarget(self, action: #selector(self.onClickSwicth(sender:)), for: UIControlEvents.valueChanged)
         
         secondLabel.frame = CGRect(x: 0, y: 0, width: dummyBadgeView.frame.size.width, height: dummyBadgeViewHeight - displaySwitch.frame.size.height)
         secondLabel.center.x = dummyBadgeView.frame.size.width / 2
@@ -137,8 +135,6 @@ extension ClockViewController {
         baseView.addSubview(timeLabel)
         baseView.addSubview(dummyIconView)
         self.view.addSubview(baseView)
-        
-        
     }
     
     func onClickSwicth(sender: RAMPaperSwitch) {
@@ -148,6 +144,7 @@ extension ClockViewController {
     func displayBadgeClock() {
         if displaySwitch.isOn {
             // スイッチがオンのときは、通知バッチに秒を表示
+            setNotification()
             backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask {
                 UIApplication.shared.endBackgroundTask(self.backgroundTaskIdentifier)
             }
@@ -194,6 +191,61 @@ extension ClockViewController {
             self.secondLabel.textColor = UIColor.red
         }
     }
+}
+
+// ローカル通知の設定: 3分後に再表示するか選択できる
+extension ClockViewController: UNUserNotificationCenterDelegate {
+    func setNotification() {
+        let continueTimer = UNNotificationAction(identifier: ActionIdentifier.continueTimer.rawValue,
+                                          title: "継続して表示する", options: [])
+        
+        let killTimer = UNNotificationAction(identifier: ActionIdentifier.killTimer.rawValue,
+                                          title: "非表示にする",options: [])
+        
+        
+        let category = UNNotificationCategory(identifier: "controlTimer", actions: [continueTimer, killTimer], intentIdentifiers:  [], options: [])
+        
+        UNUserNotificationCenter.current().setNotificationCategories([category])
+        UNUserNotificationCenter.current().delegate = self
+        
+        
+        let content = UNMutableNotificationContent()
+        content.title = "確認"
+        content.body = "タイマー(秒刻)の表示を続けますか？"
+        content.sound = UNNotificationSound.default()
+        
+        // categoryIdentifierを設定
+        content.categoryIdentifier = "controlTimer"
+        
+        // 2分30秒後
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2 * 60 + 30, repeats: false)
+        let request = UNNotificationRequest(identifier: "threeMinutes",
+                                            content: content,
+                                            trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+
+    }
+    
+    @available(iOS 10.0, *)
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Swift.Void) {
+        
+        switch response.actionIdentifier {
+        case ActionIdentifier.continueTimer.rawValue:
+            restartDisplayBackgroundClock()
+            setNotification()
+        case ActionIdentifier.killTimer.rawValue:
+            timer.invalidate()
+            UIApplication.shared.applicationIconBadgeNumber = 0
+        default:
+            ()
+        }
+        
+        completionHandler()
+    }
+
 }
 
 extension ClockViewController {

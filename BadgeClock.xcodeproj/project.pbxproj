@@ -15,7 +15,6 @@
 		63F57BFB1EFA1AA9001948A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63F57BFA1EFA1AA9001948A2 /* Assets.xcassets */; };
 		63F57BFE1EFA1AA9001948A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63F57BFC1EFA1AA9001948A2 /* LaunchScreen.storyboard */; };
 		63F57C061EFA1CC0001948A2 /* ClockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F57C051EFA1CBF001948A2 /* ClockViewController.swift */; };
-		63F57C081EFA1CC7001948A2 /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F57C071EFA1CC7001948A2 /* TimerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +28,6 @@
 		63F57BFD1EFA1AA9001948A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63F57BFF1EFA1AA9001948A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63F57C051EFA1CBF001948A2 /* ClockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClockViewController.swift; sourceTree = "<group>"; };
-		63F57C071EFA1CC7001948A2 /* TimerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,13 +62,12 @@
 			children = (
 				63F57BF31EFA1AA9001948A2 /* AppDelegate.swift */,
 				633455B41EFA338D001D80E6 /* icon.png */,
-				633455B61EFA3544001D80E6 /* UIViewExtension.swift */,
 				63F57C051EFA1CBF001948A2 /* ClockViewController.swift */,
+				633455B61EFA3544001D80E6 /* UIViewExtension.swift */,
 				631CAFE01EFBB18C00C27EFF /* RAMPaperSwitch.swift */,
-				63F57C071EFA1CC7001948A2 /* TimerViewController.swift */,
 				63F57BF71EFA1AA9001948A2 /* Main.storyboard */,
-				63F57BFA1EFA1AA9001948A2 /* Assets.xcassets */,
 				63F57BFC1EFA1AA9001948A2 /* LaunchScreen.storyboard */,
+				63F57BFA1EFA1AA9001948A2 /* Assets.xcassets */,
 				63F57BFF1EFA1AA9001948A2 /* Info.plist */,
 			);
 			path = BadgeClock;
@@ -150,7 +147,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63F57C081EFA1CC7001948A2 /* TimerViewController.swift in Sources */,
 				631CAFE11EFBB18C00C27EFF /* RAMPaperSwitch.swift in Sources */,
 				63F57C061EFA1CC0001948A2 /* ClockViewController.swift in Sources */,
 				633455B71EFA3544001D80E6 /* UIViewExtension.swift in Sources */,

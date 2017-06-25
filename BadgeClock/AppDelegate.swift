@@ -17,8 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        requestNotificationPermission() // 通知のBadgeを利用してもいいかの許可を求める
-        
+        requestNotificationPermission() // 通知の[.badge, .sound, .alert]を利用してもいいかの許可を求める
         return true
     }
 
@@ -54,16 +53,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate {
     func requestNotificationPermission() {
-        let center:UNUserNotificationCenter = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.badge], completionHandler: {(permit, error) in
+        if #available(iOS 10.0, *) {
+            // iOS 10
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.badge, .sound, .alert], completionHandler: { (granted, error) in
+                if error != nil {
+                    return
+                }
+                
+                if granted {
+                    debugPrint("通知許可")
+                } else {
+                    debugPrint("通知拒否")
+                }
+            })
             
-            if permit {
-                print("通知が許可されました")
-            }else {
-                print("通知が拒否されました")
-            }
-            
-        })
+        } else {
+            // iOS 9
+            let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
+            UIApplication.shared.registerUserNotificationSettings(settings)
+        }
     }
-
 }
