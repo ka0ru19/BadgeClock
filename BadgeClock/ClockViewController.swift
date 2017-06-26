@@ -17,7 +17,6 @@ enum ActionIdentifier: String {
 class ClockViewController: UIViewController {
     
     var displaySwitch: RAMPaperSwitch! // 表示するかどうかのswitch
-    var dummyBadgeView: UIView!
     let timeLabel = UILabel() // アプリ上で時刻(hh:mm)を表示
     let secondLabel = UILabel() // アプリ上で秒刻(ss)を表示
     let date2badgeFomatter = DateFormatter() // 現在時刻 -> "ss"にして、Badgeに表示
@@ -45,6 +44,10 @@ class ClockViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
 }
 
@@ -142,6 +145,7 @@ extension ClockViewController {
     }
     
     func displayBadgeClock() {
+        // この関数はbackgroundからしか呼ばない
         if displaySwitch.isOn {
             // スイッチがオンのときは、通知バッチに秒を表示
             setNotification()
@@ -178,16 +182,12 @@ extension ClockViewController {
         
         restartTimer()
         
-        if timer.isValid == false {
-            displayBadgeClock()
-        }
-        
         if displaySwitch.isOn {
-            self.tabBarItem.badgeValue = "ON"
             self.secondLabel.textColor = UIColor.white
         } else {
-            self.tabBarItem.badgeValue = nil
             self.secondLabel.textColor = UIColor.red
+            // Pending(通知がまだ発火していない状態)のものを全て削除
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         }
     }
 }
@@ -195,6 +195,7 @@ extension ClockViewController {
 // ローカル通知の設定: 3分後に再表示するか選択できる
 extension ClockViewController: UNUserNotificationCenterDelegate {
     func setNotification() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests() // 既に設定された通知の全削除
         let continueTimer = UNNotificationAction(identifier: ActionIdentifier.continueTimer.rawValue,
                                           title: "継続して表示する", options: [])
         
@@ -233,10 +234,9 @@ extension ClockViewController: UNUserNotificationCenterDelegate {
         
         switch response.actionIdentifier {
         case ActionIdentifier.continueTimer.rawValue:
-            restartTimer()
-            setNotification()
+            displayBadgeClock()
         case ActionIdentifier.killTimer.rawValue:
-            timer.invalidate()
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
             UIApplication.shared.applicationIconBadgeNumber = 0
         default:
             ()
@@ -245,10 +245,4 @@ extension ClockViewController: UNUserNotificationCenterDelegate {
         completionHandler()
     }
 
-}
-
-extension ClockViewController {
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
 }
