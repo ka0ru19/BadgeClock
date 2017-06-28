@@ -160,9 +160,9 @@ extension ClockViewController {
     }
     
     func updateClock() {
-        let nowPlus1sec = Date().addingTimeInterval(TimeInterval(1))
-        let str = date2badgeFomatter.string(from: nowPlus1sec) // 1secだけ先取りする
-        let timeStr = date2hhmmFomatter.string(from: nowPlus1sec) // 1secだけ先取りする
+        let nowPlus1sec = Date().addingTimeInterval(TimeInterval(1)) // 現在時刻に1secだけ先取りする
+        let str = date2badgeFomatter.string(from: nowPlus1sec)
+        let timeStr = date2hhmmFomatter.string(from: nowPlus1sec)
         print("\(nowPlus1sec) ->  \(str)")
         if let numClock = Int(str) {
             UIApplication.shared.applicationIconBadgeNumber = numClock
@@ -193,56 +193,23 @@ extension ClockViewController {
 }
 
 // ローカル通知の設定: 3分後に再表示するか選択できる
-extension ClockViewController: UNUserNotificationCenterDelegate {
+extension ClockViewController {
+    
     func setNotification() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests() // 既に設定された通知の全削除
-        let continueTimer = UNNotificationAction(identifier: ActionIdentifier.continueTimer.rawValue,
-                                          title: "継続して表示する", options: [])
-        
-        let killTimer = UNNotificationAction(identifier: ActionIdentifier.killTimer.rawValue,
-                                          title: "非表示にする",options: [])
-        
-        
-        let category = UNNotificationCategory(identifier: "controlTimer", actions: [continueTimer, killTimer], intentIdentifiers:  [], options: [])
-        
-        UNUserNotificationCenter.current().setNotificationCategories([category])
-        UNUserNotificationCenter.current().delegate = self
-        
-        
+
+        // 通知自体の設定
         let content = UNMutableNotificationContent()
-        content.title = "確認"
-        content.body = "タイマー(秒刻)の表示を続けますか？"
+        content.title = NSString.localizedUserNotificationString(forKey: "まもなく秒読みを終了します", arguments: nil)
+        content.body = NSString.localizedUserNotificationString(forKey: "続けて表示するには再度アプリを開いてください", arguments: nil)
         content.sound = UNNotificationSound.default()
-        
-        // categoryIdentifierを設定
-        content.categoryIdentifier = "controlTimer"
         
         // 2分30秒後
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2 * 60 + 30, repeats: false)
-        let request = UNNotificationRequest(identifier: "threeMinutes",
-                                            content: content,
-                                            trigger: trigger)
+        let request = UNNotificationRequest(identifier: "my-threeMinutes", content: content, trigger: trigger)
         
+        // 通知を登録
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
 
     }
-    
-    @available(iOS 10.0, *)
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: @escaping () -> Swift.Void) {
-        
-        switch response.actionIdentifier {
-        case ActionIdentifier.continueTimer.rawValue:
-            displayBadgeClock()
-        case ActionIdentifier.killTimer.rawValue:
-            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-            UIApplication.shared.applicationIconBadgeNumber = 0
-        default:
-            ()
-        }
-        
-        completionHandler()
-    }
-
 }
