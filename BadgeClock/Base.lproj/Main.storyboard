@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="sgQ-F8-gOc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="KTx-2G-7s7">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -9,23 +9,65 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Clock View Controller-->
-        <scene sceneID="yt4-4g-4zX">
+        <!--Timer-->
+        <scene sceneID="nFm-pm-HvH">
             <objects>
-                <viewController id="sgQ-F8-gOc" customClass="ClockViewController" customModule="BadgeClock" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="4yN-75-9dw" customClass="TimerViewController" customModule="BadgeClock" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="GbV-Y2-7Bd"/>
-                        <viewControllerLayoutGuide type="bottom" id="QvT-pm-Dk8"/>
+                        <viewControllerLayoutGuide type="top" id="f0h-4R-lPS"/>
+                        <viewControllerLayoutGuide type="bottom" id="Z1T-FC-Fxc"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="chh-Dg-Gz4">
+                    <view key="view" contentMode="scaleToFill" id="LTW-Bx-jRp">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Timer" image="tab_timer" id="IGv-a5-6Oa"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="c86-ee-fbe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="toE-a7-h4N" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="478" y="-226"/>
+            <point key="canvasLocation" x="318" y="152"/>
+        </scene>
+        <!--Clock-->
+        <scene sceneID="qkB-c9-aPJ">
+            <objects>
+                <viewController id="1fS-ku-Kcr" customClass="ClockViewController" customModule="BadgeClock" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="rzK-Fa-v9y"/>
+                        <viewControllerLayoutGuide type="bottom" id="IJ5-og-LmS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="0e0-mV-4Ef">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Clock" image="tab_clock" id="LdQ-fv-UF1"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Dcm-3B-WTL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="318" y="-504"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="SOK-iN-PCo">
+            <objects>
+                <tabBarController id="KTx-2G-7s7" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="xGm-7I-k89">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="1fS-ku-Kcr" kind="relationship" relationship="viewControllers" id="EG1-cy-3J8"/>
+                        <segue destination="4yN-75-9dw" kind="relationship" relationship="viewControllers" id="Of0-iR-TiV"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zhB-k7-NBp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-633" y="-175"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="tab_clock" width="25" height="25"/>
+        <image name="tab_timer" width="25" height="25"/>
+    </resources>
 </document>

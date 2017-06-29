@@ -149,7 +149,7 @@ extension ClockViewController {
         if displaySwitch.isOn {
             // スイッチがオンのときは、通知バッチに秒を表示
             setNotification()
-            backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask {
+            let backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask {
                 UIApplication.shared.endBackgroundTask(self.backgroundTaskIdentifier)
             }
         } else {
