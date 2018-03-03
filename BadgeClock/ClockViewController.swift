@@ -8,6 +8,7 @@
 
 import UIKit
 import UserNotifications
+import AVFoundation
 
 enum ActionIdentifier: String {
     case continueTimer
@@ -161,6 +162,8 @@ extension ClockViewController {
     
     func updateClock() {
         let nowPlus1sec = Date().addingTimeInterval(TimeInterval(1)) // 現在時刻に1secだけ先取りする
+        let sec = Calendar.current.dateComponents([.second], from: nowPlus1sec).second ?? 0
+        speach(text: String(sec))
         let str = date2badgeFomatter.string(from: nowPlus1sec)
         let timeStr = date2hhmmFomatter.string(from: nowPlus1sec)
         print("\(nowPlus1sec) ->  \(str)")
@@ -211,5 +214,17 @@ extension ClockViewController {
         // 通知を登録
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
 
+    }
+}
+
+// 読み上げのメソッドの定義
+extension ClockViewController: AVSpeechSynthesizerDelegate {
+    func speach(text: String) {
+        let avSpeechSynthesizer = AVSpeechSynthesizer()
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+        utterance.rate = 0.8 //読み上げの速度
+        avSpeechSynthesizer.delegate = self
+        avSpeechSynthesizer.speak(utterance) //発話
     }
 }
