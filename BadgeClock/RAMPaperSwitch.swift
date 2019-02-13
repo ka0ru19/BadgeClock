@@ -92,7 +92,7 @@ open class RAMPaperSwitch: UISwitch, CAAnimationDelegate {
         
         showShapeIfNeed()
         
-        addTarget(self, action: #selector(RAMPaperSwitch.switchChanged), for: UIControlEvents.valueChanged)
+        addTarget(self, action: #selector(RAMPaperSwitch.switchChanged), for: UIControl.Event.valueChanged)
     }
     
     override open func layoutSubviews() {
@@ -126,7 +126,7 @@ open class RAMPaperSwitch: UISwitch, CAAnimationDelegate {
         shape.transform = isOn ? CATransform3DMakeScale(1.0, 1.0, 1.0) : CATransform3DMakeScale(0.0001, 0.0001, 0.0001)
     }
     
-    internal func switchChanged() {
+    @objc internal func switchChanged() {
         switchChangeWithAnimation(true)
     }
     
@@ -138,9 +138,9 @@ open class RAMPaperSwitch: UISwitch, CAAnimationDelegate {
         animation.fromValue             = from
         animation.toValue               = to
         animation.repeatCount           = 1
-        animation.timingFunction        = CAMediaTimingFunction(name: timingFunction)
+        animation.timingFunction        = CAMediaTimingFunction(name: convertToCAMediaTimingFunctionName(timingFunction))
         animation.isRemovedOnCompletion = false
-        animation.fillMode              = kCAFillModeForwards
+        animation.fillMode              = CAMediaTimingFillMode.forwards
         animation.duration              = duration
         animation.delegate              = self
         
@@ -158,7 +158,7 @@ open class RAMPaperSwitch: UISwitch, CAAnimationDelegate {
             let scaleAnimation:CABasicAnimation  = animateKeyPath(Constants.scale,
                                                                   fromValue: 0.01,
                                                                   toValue: 1.0,
-                                                                  timing:kCAMediaTimingFunctionEaseIn);
+                                                                  timing:convertFromCAMediaTimingFunctionName(CAMediaTimingFunctionName.easeIn));
             if animation == false { scaleAnimation.duration = 0.0001 }
             
             shape.add(scaleAnimation, forKey: Constants.up)
@@ -166,7 +166,7 @@ open class RAMPaperSwitch: UISwitch, CAAnimationDelegate {
             let scaleAnimation:CABasicAnimation  = animateKeyPath(Constants.scale,
                                                                   fromValue: 1.0,
                                                                   toValue: 0.01,
-                                                                  timing:kCAMediaTimingFunctionEaseOut);
+                                                                  timing:convertFromCAMediaTimingFunctionName(CAMediaTimingFunctionName.easeOut));
             if animation == false { scaleAnimation.duration = 0.0001 }
             
             shape.add(scaleAnimation, forKey: Constants.down)
@@ -186,4 +186,14 @@ open class RAMPaperSwitch: UISwitch, CAAnimationDelegate {
         
         animationDidStopClosure(isOn, flag)
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToCAMediaTimingFunctionName(_ input: String) -> CAMediaTimingFunctionName {
+	return CAMediaTimingFunctionName(rawValue: input)
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCAMediaTimingFunctionName(_ input: CAMediaTimingFunctionName) -> String {
+	return input.rawValue
 }

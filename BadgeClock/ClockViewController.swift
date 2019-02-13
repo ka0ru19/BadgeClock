@@ -22,7 +22,7 @@ class ClockViewController: UIViewController {
     let secondLabel = UILabel() // アプリ上で秒刻(ss)を表示
     let date2badgeFomatter = DateFormatter() // 現在時刻 -> "ss"にして、Badgeに表示
     let date2hhmmFomatter = DateFormatter() // 現在時刻 -> "hh:mm"にして、timeLabelに表示
-    var backgroundTaskIdentifier: UIBackgroundTaskIdentifier = 0
+    var backgroundTaskIdentifier: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier(rawValue: 0)
     
     var timer = Timer()
     
@@ -59,7 +59,7 @@ extension ClockViewController {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.displayBadgeClock),
-            name: NSNotification.Name.UIApplicationWillResignActive,
+            name: UIApplication.willResignActiveNotification,
             object: nil
         )
         
@@ -67,7 +67,7 @@ extension ClockViewController {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.restartTimer),
-            name: NSNotification.Name.UIApplicationDidBecomeActive,
+            name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
     }
@@ -120,7 +120,7 @@ extension ClockViewController {
         displaySwitch.center = CGPoint(x: dummyBadgeView.frame.size.width / 2, y: dummyBadgeView.frame.size.height - displaySwitch.frame.size.height / 2 - 4) // (0, 0)だと画面の左上
         displaySwitch.isOn = true
         displaySwitch.isEnabled = true
-        displaySwitch.addTarget(self, action: #selector(self.onClickSwicth(sender:)), for: UIControlEvents.valueChanged)
+        displaySwitch.addTarget(self, action: #selector(self.onClickSwicth(sender:)), for: UIControl.Event.valueChanged)
         
         secondLabel.frame = CGRect(x: 0, y: 0, width: dummyBadgeView.frame.size.width, height: dummyBadgeViewHeight - displaySwitch.frame.size.height)
         secondLabel.center.x = dummyBadgeView.frame.size.width / 2
@@ -141,17 +141,17 @@ extension ClockViewController {
         self.view.addSubview(baseView)
     }
     
-    func onClickSwicth(sender: RAMPaperSwitch) {
+    @objc func onClickSwicth(sender: RAMPaperSwitch) {
         setStatus()
     }
     
-    func displayBadgeClock() {
+    @objc func displayBadgeClock() {
         // この関数はbackgroundからしか呼ばない
         if displaySwitch.isOn {
             // スイッチがオンのときは、通知バッチに秒を表示
             setNotification()
             backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask {
-                UIApplication.shared.endBackgroundTask(self.backgroundTaskIdentifier)
+                UIApplication.shared.endBackgroundTask(convertToUIBackgroundTaskIdentifier(self.backgroundTaskIdentifier.rawValue))
             }
         } else {
             // スイッチが切られていたら、通知バッチは非表示
@@ -160,7 +160,7 @@ extension ClockViewController {
         }
     }
     
-    func updateClock() {
+    @objc func updateClock() {
         let nowPlus1sec = Date().addingTimeInterval(TimeInterval(1)) // 現在時刻に1secだけ先取りする
         let sec = Calendar.current.dateComponents([.second], from: nowPlus1sec).second ?? 0
         speach(text: String(sec))
@@ -174,7 +174,7 @@ extension ClockViewController {
         }
     }
     
-    func restartTimer() {
+    @objc func restartTimer() {
         timer.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateClock), userInfo: nil, repeats: true)
     }
@@ -205,7 +205,7 @@ extension ClockViewController {
         let content = UNMutableNotificationContent()
         content.title = NSString.localizedUserNotificationString(forKey: "まもなく秒読みを終了します", arguments: nil)
         content.body = NSString.localizedUserNotificationString(forKey: "続けて表示するには再度アプリを開いてください", arguments: nil)
-        content.sound = UNNotificationSound.default()
+        content.sound = UNNotificationSound.default
         
         // 2分30秒後
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2 * 60 + 30, repeats: false)
@@ -227,4 +227,9 @@ extension ClockViewController: AVSpeechSynthesizerDelegate {
         avSpeechSynthesizer.delegate = self
         avSpeechSynthesizer.speak(utterance) //発話
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIBackgroundTaskIdentifier(_ input: Int) -> UIBackgroundTaskIdentifier {
+	return UIBackgroundTaskIdentifier(rawValue: input)
 }
